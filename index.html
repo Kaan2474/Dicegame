@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dice Game</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="container">
+        <h1>Dice Game</h1>
+        <p id="my-name" class="names">You</p>
+        <p id="rival-name" class="names">Rival</p>
+        <svg width="1800" height="300">
+            <rect id="first-dice" x="400" y="50" width="200" height="200" stroke="#293133" stroke-width="6" fill="white"/>
+            <rect id="second-dice" x="1200" y="50" width="200" height="200" stroke="#293133" stroke-width="6" fill="white"/>
+        </svg>
+        <p id="my-score" class="scores">Score: 0</p>
+        <p id="rival-score" class="scores">Score: 0</p>
+        <p id="game-status">You have lost!</p>
+        <button id="roll-button">Roll Dice</button>
+    </div>
+</body>
+<script src="main.js"></script>
+</html>
