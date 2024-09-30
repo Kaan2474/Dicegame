@@ -1,20 +1,37 @@
 const SVG = document.querySelector("svg");
 const SVG_NAMESPACE = "http://www.w3.org/2000/svg";
-const CIRCLE_ONE = document.createElementNS(SVG_NAMESPACE, "circle");
-const CIRCLE_TWO = document.createElementNS(SVG_NAMESPACE, "circle");
-const CIRCLE_THREE = document.createElementNS(SVG_NAMESPACE, "circle");
-const CIRCLE_FOUR = document.createElementNS(SVG_NAMESPACE, "circle");
-const CIRCLE_FIVE = document.createElementNS(SVG_NAMESPACE, "circle");
-const CIRCLE_SIX = document.createElementNS(SVG_NAMESPACE, "circle");
-const CIRCLE_SEVEN = document.createElementNS(SVG_NAMESPACE, "circle");
-const ALL_CIRCLES = [CIRCLE_ONE, CIRCLE_TWO, CIRCLE_THREE, CIRCLE_FOUR, CIRCLE_FIVE, CIRCLE_SIX, CIRCLE_SEVEN];
+const CIRCLE_1 = document.createElementNS(SVG_NAMESPACE, "circle");
+const CIRCLE_2 = document.createElementNS(SVG_NAMESPACE, "circle");
+const CIRCLE_3 = document.createElementNS(SVG_NAMESPACE, "circle");
+const CIRCLE_4 = document.createElementNS(SVG_NAMESPACE, "circle");
+const CIRCLE_5 = document.createElementNS(SVG_NAMESPACE, "circle");
+const CIRCLE_6 = document.createElementNS(SVG_NAMESPACE, "circle");
+const CIRCLE_7 = document.createElementNS(SVG_NAMESPACE, "circle");
+const MY_CIRCLES = [CIRCLE_1, CIRCLE_2, CIRCLE_3, CIRCLE_4, CIRCLE_5, CIRCLE_6, CIRCLE_7];
+
+//Kreise des Gegners
+const CIRCLE_8 = document.createElementNS(SVG_NAMESPACE, "circle");
+const CIRCLE_9 = document.createElementNS(SVG_NAMESPACE, "circle");
+const CIRCLE_10 = document.createElementNS(SVG_NAMESPACE, "circle");
+const CIRCLE_11= document.createElementNS(SVG_NAMESPACE, "circle");
+const CIRCLE_12= document.createElementNS(SVG_NAMESPACE, "circle");
+const CIRCLE_13 = document.createElementNS(SVG_NAMESPACE, "circle");
+const CIRCLE_14 = document.createElementNS(SVG_NAMESPACE, "circle");
+const RIVAL_CIRCLES = [CIRCLE_8, CIRCLE_9, CIRCLE_10, CIRCLE_11, CIRCLE_12, CIRCLE_13, CIRCLE_14];
+
+const rollDiceButton = document.getElementById("roll-button");
+rollDiceButton.addEventListener('click', buttonHandler);
+
+let myScorePoints = 0;
+let rivalScorePoints = 0;
 
 
 //Fügt die Kreise dem SVG zu
 function appendCirclesToSvg() {
-    const circleSize = ALL_CIRCLES.length;
+    const circleSize = 7;
     for(let i = 0; i<circleSize; i++) {
-        SVG.appendChild(ALL_CIRCLES[i]);
+        SVG.appendChild(MY_CIRCLES[i]);
+        SVG.appendChild(RIVAL_CIRCLES[i]);
     }
 }
 
@@ -30,20 +47,22 @@ function setAttributes(circle, cx, cy, color) {
 
 //Setzt die Attribute der Kreise
 function setCircleAttributes() {
-    setAttributes(CIRCLE_ONE, "500", "150", "white")
-    setAttributes(CIRCLE_TWO, "450", "100", "white")
-    setAttributes(CIRCLE_THREE, "550", "200", "white")
-    setAttributes(CIRCLE_FOUR, "550", "100", "white")
-    setAttributes(CIRCLE_FIVE, "450", "200", "white")
-    setAttributes(CIRCLE_SIX, "450", "150", "white")
-    setAttributes(CIRCLE_SEVEN, "550", "150", "white")
-}
-
-
-//Wenn ,,Roll Dice'' gedrückt wird passiert folgendes:
-function buttonHandler() {
-    const diceNumber = generateRandomNumber(6);
-    createMyDice(diceNumber);
+    //Meine Kreise
+    setAttributes(CIRCLE_1, "500", "150", "white")
+    setAttributes(CIRCLE_2, "450", "100", "white")
+    setAttributes(CIRCLE_3, "550", "200", "white")
+    setAttributes(CIRCLE_4, "550", "100", "white")
+    setAttributes(CIRCLE_5, "450", "200", "white")
+    setAttributes(CIRCLE_6, "450", "150", "white")
+    setAttributes(CIRCLE_7, "550", "150", "white")
+    //Gegner Kreise
+    setAttributes(CIRCLE_8, "1300", "150", "white")
+    setAttributes(CIRCLE_9, "1250", "100", "white")
+    setAttributes(CIRCLE_10, "1350", "200", "white")
+    setAttributes(CIRCLE_11, "1350", "100", "white")
+    setAttributes(CIRCLE_12, "1250", "200", "white")
+    setAttributes(CIRCLE_13, "1250", "150", "white")
+    setAttributes(CIRCLE_14, "1350", "150", "white")
 }
 
 
@@ -53,114 +72,187 @@ function generateRandomNumber(max) {
 }
 
 
-//Färbt alle Kreise weiß
-function setAllCirclesToWhite() {
-    const circleLength = ALL_CIRCLES.length;
+function isUnderSeventySeven(score) {
+    if(score <= 77) {
+        return true;
+    }
+    return false;
+}
+
+
+function updateMyScore(diceNumber) {
+    const myScore = document.getElementById("my-score");
+    myScorePoints = myScorePoints + diceNumber;
+    if(isUnderSeventySeven(myScorePoints)) {
+        myScore.textContent = "Score: " + myScorePoints;
+    }
+    else {
+        myScorePoints = myScorePoints - diceNumber;
+    }
+}
+
+
+function updateRivalScore(diceNumber) {
+    const rivalScore = document.getElementById("rival-score");
+    rivalScorePoints = rivalScorePoints + diceNumber;
+    if(isUnderSeventySeven(rivalScorePoints)) {
+        rivalScore.textContent = "Score: " + rivalScorePoints;
+    }
+    else {
+        rivalScorePoints = rivalScorePoints - diceNumber;
+    }
+}
+
+
+//Färbt alle meine Kreise weiß
+function setMyCirclesToWhite() {
+    const circleLength = MY_CIRCLES.length;
     for(let i = 0; i<circleLength; i++) {
-        ALL_CIRCLES[i].setAttribute("fill", "white");
+        MY_CIRCLES[i].setAttribute("fill", "white");
     }
 }
 
 
 /*
 cx und cy Koordinaten der Kreise
-CIRCLE_ONE, 500, 150
-CIRCLE_TWO, 450, 100
-CIRCLE_THREE, 550, 200
-CIRCLE_FOUR, 550, 100
-CIRCLE_FIVE, 450, 200
-CIRCLE_SIX, 450, 150
-CIRCLE_SEVEN, 550, 150 
+CIRCLE_1, 500, 150
+CIRCLE_2, 450, 100
+CIRCLE_3, 550, 200
+CIRCLE_4, 550, 100
+CIRCLE_5, 450, 200
+CIRCLE_6, 450, 150
+CIRCLE_7, 550, 150 
 */
-function createMyDice(diceNumber) {
-    setAllCirclesToWhite();
+function createMyDice() {
+    setMyCirclesToWhite();
+    const diceNumber = generateRandomNumber(6);
     switch(diceNumber) {
         case 1:
-            CIRCLE_ONE.setAttribute("fill", "black");
+            CIRCLE_1.setAttribute("fill", "black");
             break;
         case 2:
-            CIRCLE_TWO.setAttribute("fill", "black");
-            CIRCLE_THREE.setAttribute("fill", "black");
+            CIRCLE_2.setAttribute("fill", "black");
+            CIRCLE_3.setAttribute("fill", "black");
             break;
         case 3:
-            CIRCLE_ONE.setAttribute("fill", "black");
-            CIRCLE_TWO.setAttribute("fill", "black");
-            CIRCLE_THREE.setAttribute("fill", "black");
+            CIRCLE_1.setAttribute("fill", "black");
+            CIRCLE_2.setAttribute("fill", "black");
+            CIRCLE_3.setAttribute("fill", "black");
             break;
         case 4:
-            CIRCLE_TWO.setAttribute("fill", "black");
-            CIRCLE_THREE.setAttribute("fill", "black");
-            CIRCLE_FOUR.setAttribute("fill", "black");
-            CIRCLE_FIVE.setAttribute("fill", "black");
+            CIRCLE_2.setAttribute("fill", "black");
+            CIRCLE_3.setAttribute("fill", "black");
+            CIRCLE_4.setAttribute("fill", "black");
+            CIRCLE_5.setAttribute("fill", "black");
             break;
         case 5:
-            CIRCLE_ONE.setAttribute("fill", "black");
-            CIRCLE_TWO.setAttribute("fill", "black");
-            CIRCLE_THREE.setAttribute("fill", "black");
-            CIRCLE_FOUR.setAttribute("fill", "black");
-            CIRCLE_FIVE.setAttribute("fill", "black");
+            CIRCLE_1.setAttribute("fill", "black");
+            CIRCLE_2.setAttribute("fill", "black");
+            CIRCLE_3.setAttribute("fill", "black");
+            CIRCLE_4.setAttribute("fill", "black");
+            CIRCLE_5.setAttribute("fill", "black");
             break;
         case 6:
-            CIRCLE_TWO.setAttribute("fill", "black");
-            CIRCLE_THREE.setAttribute("fill", "black");
-            CIRCLE_FOUR.setAttribute("fill", "black");
-            CIRCLE_FIVE.setAttribute("fill", "black");
-            CIRCLE_SIX.setAttribute("fill", "black");
-            CIRCLE_SEVEN.setAttribute("fill", "black");
+            CIRCLE_2.setAttribute("fill", "black");
+            CIRCLE_3.setAttribute("fill", "black");
+            CIRCLE_4.setAttribute("fill", "black");
+            CIRCLE_5.setAttribute("fill", "black");
+            CIRCLE_6.setAttribute("fill", "black");
+            CIRCLE_7.setAttribute("fill", "black");
             break;
+        default:
+            console.log("Fehler");
+    }
+    updateMyScore(diceNumber);
+}
+
+
+//Färbt alle Gegner Kreise weiß
+function setRivalCirclesToWhite() {
+    const circleLength = RIVAL_CIRCLES.length;
+    for(let i = 0; i<circleLength; i++) {
+        RIVAL_CIRCLES[i].setAttribute("fill", "white");
     }
 }
 
 
-function createRivalDice(diceNumber) {
-    const svg = document.querySelector("svg");
-    const svgNamespace = "http://www.w3.org/2000/svg";
-    const circle_1 = document.createElementNS(svgNamespace, "circle");
-    const circle_2 = document.createElementNS(svgNamespace, "circle");
-    const circle_3 = document.createElementNS(svgNamespace, "circle");
-    const circle_4 = document.createElementNS(svgNamespace, "circle");
-    const circle_5 = document.createElementNS(svgNamespace, "circle");
-    const circle_6 = document.createElementNS(svgNamespace, "circle");
-
-
+/*
+cx und cy Koordinaten der Kreise
+CIRCLE_8, 1300, 150
+CIRCLE_9, 1250, 100
+CIRCLE_10, 1350, 200
+CIRCLE_11, 1350, 100
+CIRCLE_12, 1250, 200
+CIRCLE_13, 1250, 150
+CIRCLE_14, 1350, 150 
+*/
+function createRivalDice() {
+    setRivalCirclesToWhite();
+    const diceNumber = generateRandomNumber(6);
     switch(diceNumber) {
         case 1:
-            setCircleAttributes(circle_1, "1300", "150");
+            CIRCLE_8.setAttribute("fill", "black");
             break;
         case 2:
-            setCircleAttributes(circle_2, "1250", "100");
-            setCircleAttributes(circle_3, "1350", "200");
+            CIRCLE_9.setAttribute("fill", "black");
+            CIRCLE_10.setAttribute("fill", "black");
             break;
         case 3:
-            setCircleAttributes(circle_1, "1250", "100");
-            setCircleAttributes(circle_2, "1300", "150");
-            setCircleAttributes(circle_3, "1350", "200");
+            CIRCLE_8.setAttribute("fill", "black");
+            CIRCLE_9.setAttribute("fill", "black");
+            CIRCLE_10.setAttribute("fill", "black");
             break;
         case 4:
-            setCircleAttributes(circle_1, "1250", "100");
-            setCircleAttributes(circle_2, "1350", "100");
-            setCircleAttributes(circle_3, "1250", "200");
-            setCircleAttributes(circle_4, "1350", "200");
+            CIRCLE_9.setAttribute("fill", "black");
+            CIRCLE_10.setAttribute("fill", "black");
+            CIRCLE_11.setAttribute("fill", "black");
+            CIRCLE_12.setAttribute("fill", "black");
             break;
         case 5:
-            setCircleAttributes(circle_1, "1250", "100");
-            setCircleAttributes(circle_2, "1350", "100");
-            setCircleAttributes(circle_3, "1300", "150");
-            setCircleAttributes(circle_4, "1250", "200");
-            setCircleAttributes(circle_5, "1350", "200");
+            CIRCLE_8.setAttribute("fill", "black");
+            CIRCLE_9.setAttribute("fill", "black");
+            CIRCLE_10.setAttribute("fill", "black");
+            CIRCLE_11.setAttribute("fill", "black");
+            CIRCLE_12.setAttribute("fill", "black");
             break;
         case 6:
-            setCircleAttributes(circle_1, "1250", "100");
-            setCircleAttributes(circle_2, "1250", "150");
-            setCircleAttributes(circle_3, "1350", "150");
-            setCircleAttributes(circle_4, "1350", "100");
-            setCircleAttributes(circle_5, "1250", "200");
-            setCircleAttributes(circle_6, "1350", "200");
+            CIRCLE_9.setAttribute("fill", "black");
+            CIRCLE_10.setAttribute("fill", "black");
+            CIRCLE_11.setAttribute("fill", "black");
+            CIRCLE_12.setAttribute("fill", "black");
+            CIRCLE_13.setAttribute("fill", "black");
+            CIRCLE_14.setAttribute("fill", "black");
             break;
+        default:
+            console.log("Fehler");
     }
+    updateRivalScore(diceNumber);
+    rollDiceButton.addEventListener("click", buttonHandler);
+}
+
+
+function checkWinner() {
+    const gameStatus = document.getElementById("game-status");
+    if(myScorePoints === 77) {
+        rollDiceButton.removeEventListener("click", buttonHandler);
+        gameStatus.textContent = "You have won!";
+    }
+    else if(rivalScorePoints == 77) {
+        rollDiceButton.removeEventListener("click", buttonHandler);
+        gameStatus.textContent = "You have lost!";
+    }
+}
+
+
+//Wenn ,,Roll Dice'' gedrückt wird passiert folgendes:
+function buttonHandler() {
+    rollDiceButton.removeEventListener('click', buttonHandler);
+    createMyDice();
+    checkWinner();
+    createRivalDice();
+    checkWinner();
 }
 
 
 appendCirclesToSvg();
 setCircleAttributes();
-document.getElementById('roll-button').addEventListener('click', buttonHandler);
