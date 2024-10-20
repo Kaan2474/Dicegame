@@ -70,10 +70,8 @@ h1 {
 }
 
 
-#roll-button {
+.buttons {
     position: relative;
-    left: 31%;
-    bottom: 30px;
     cursor: pointer;
     text-align: center;
     width: 200px;
@@ -86,13 +84,23 @@ h1 {
     z-index: 1;
 }
 
+#restart-button {
+    left: 19.65%;
+    bottom: 120px;
+}
 
-#roll-button:hover {
+#roll-button {
+    left: 31%;
+    bottom: 30px;
+}
+
+
+.buttons:hover {
     color: white;
 }
 
 
-#roll-button:before {
+.buttons:before {
     transition: 0.5s all ease;
     position: absolute;
     top: 0;
@@ -105,7 +113,7 @@ h1 {
 }
 
 
-#roll-button:hover:before {
+.buttons:hover:before {
     transition: 0.5s all ease;
     left: 0;
     right: 0;

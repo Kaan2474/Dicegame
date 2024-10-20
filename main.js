@@ -1,42 +1,55 @@
-const SVG = document.querySelector("svg");
-const SVG_NAMESPACE = "http://www.w3.org/2000/svg";
-const CIRCLE_1 = document.createElementNS(SVG_NAMESPACE, "circle");
-const CIRCLE_2 = document.createElementNS(SVG_NAMESPACE, "circle");
-const CIRCLE_3 = document.createElementNS(SVG_NAMESPACE, "circle");
-const CIRCLE_4 = document.createElementNS(SVG_NAMESPACE, "circle");
-const CIRCLE_5 = document.createElementNS(SVG_NAMESPACE, "circle");
-const CIRCLE_6 = document.createElementNS(SVG_NAMESPACE, "circle");
-const CIRCLE_7 = document.createElementNS(SVG_NAMESPACE, "circle");
-const MY_CIRCLES = [CIRCLE_1, CIRCLE_2, CIRCLE_3, CIRCLE_4, CIRCLE_5, CIRCLE_6, CIRCLE_7];
 
-//Kreise des Gegners
-const CIRCLE_8 = document.createElementNS(SVG_NAMESPACE, "circle");
-const CIRCLE_9 = document.createElementNS(SVG_NAMESPACE, "circle");
-const CIRCLE_10 = document.createElementNS(SVG_NAMESPACE, "circle");
-const CIRCLE_11= document.createElementNS(SVG_NAMESPACE, "circle");
-const CIRCLE_12= document.createElementNS(SVG_NAMESPACE, "circle");
-const CIRCLE_13 = document.createElementNS(SVG_NAMESPACE, "circle");
-const CIRCLE_14 = document.createElementNS(SVG_NAMESPACE, "circle");
-const RIVAL_CIRCLES = [CIRCLE_8, CIRCLE_9, CIRCLE_10, CIRCLE_11, CIRCLE_12, CIRCLE_13, CIRCLE_14];
+// Meine Kreise
+const MY_CIRCLES = [];
 
-const rollDiceButton = document.getElementById("roll-button");
-rollDiceButton.addEventListener('click', buttonHandler);
-
-let myScorePoints = 0;
-let rivalScorePoints = 0;
+// Kreise des Gegners
+const RIVAL_CIRCLES = [];
 
 
-//Fügt die Kreise dem SVG zu
-function appendCirclesToSvg() {
-    const circleSize = 7;
-    for(let i = 0; i<circleSize; i++) {
-        SVG.appendChild(MY_CIRCLES[i]);
-        SVG.appendChild(RIVAL_CIRCLES[i]);
+
+// Erstellt alle Kreise, welche als Würfelzahlen dienen und fügt die Kreise dem SVG hinzu
+function createCircles() {
+    const svgNamespace = "http://www.w3.org/2000/svg";
+    const svg = document.querySelector("svg");
+    const numberOfCircles = 7;
+    for (let i = 0; i<numberOfCircles; i++) {
+        MY_CIRCLES[i] = document.createElementNS(svgNamespace, "circle");
+        svg.appendChild(MY_CIRCLES[i]);
+        RIVAL_CIRCLES[i] = document.createElementNS(svgNamespace, "circle");
+        svg.appendChild(RIVAL_CIRCLES[i]);
     }
+
+    // Nachdem die Kreise erstellt wurden, werden die Attribute der Kreise gesetzt
+    setCircleAttributes();
 }
 
 
-//Vorlage um die Attribute der Kreise zu setzen
+
+// Fügt dem ,,Roll Dice'' Button Funktionalität hinzu
+function addRollDiceButtonFunctionality() {
+    const rollDiceButton = document.getElementById("roll-button");
+    rollDiceButton.addEventListener('click', buttonHandler);
+}
+
+
+
+// Fügt dem ,,Restart'' Button Funktionalität hinzu
+function addRestartButtonFunctionality() {
+    const restartButton = document.getElementById("restart-button");
+    restartButton.addEventListener("click", restartGame);
+}
+
+
+
+function startGame() {
+    createCircles();
+    addRollDiceButtonFunctionality();
+    addRestartButtonFunctionality();
+}
+
+
+
+// Vorlage um die Attribute der Kreise zu setzen:
 function setAttributes(circle, cx, cy, color) {
     circle.setAttribute("cx", cx);
     circle.setAttribute("cy", cy);
@@ -45,214 +58,274 @@ function setAttributes(circle, cx, cy, color) {
 }
 
 
-//Setzt die Attribute der Kreise
+
+// Setzt die Attribute der Kreise: Koordinaten und Farbe
 function setCircleAttributes() {
-    //Meine Kreise
-    setAttributes(CIRCLE_1, "500", "150", "white")
-    setAttributes(CIRCLE_2, "450", "100", "white")
-    setAttributes(CIRCLE_3, "550", "200", "white")
-    setAttributes(CIRCLE_4, "550", "100", "white")
-    setAttributes(CIRCLE_5, "450", "200", "white")
-    setAttributes(CIRCLE_6, "450", "150", "white")
-    setAttributes(CIRCLE_7, "550", "150", "white")
-    //Gegner Kreise
-    setAttributes(CIRCLE_8, "1300", "150", "white")
-    setAttributes(CIRCLE_9, "1250", "100", "white")
-    setAttributes(CIRCLE_10, "1350", "200", "white")
-    setAttributes(CIRCLE_11, "1350", "100", "white")
-    setAttributes(CIRCLE_12, "1250", "200", "white")
-    setAttributes(CIRCLE_13, "1250", "150", "white")
-    setAttributes(CIRCLE_14, "1350", "150", "white")
+    // Meine Kreise
+    setAttributes(MY_CIRCLES[0], "500", "150", "white")
+    setAttributes(MY_CIRCLES[1], "450", "100", "white")
+    setAttributes(MY_CIRCLES[2], "550", "200", "white")
+    setAttributes(MY_CIRCLES[3], "550", "100", "white")
+    setAttributes(MY_CIRCLES[4], "450", "200", "white")
+    setAttributes(MY_CIRCLES[5], "450", "150", "white")
+    setAttributes(MY_CIRCLES[6], "550", "150", "white")
+
+    // Gegner Kreise
+    setAttributes(RIVAL_CIRCLES[0], "1300", "150", "white")
+    setAttributes(RIVAL_CIRCLES[1], "1250", "100", "white")
+    setAttributes(RIVAL_CIRCLES[2], "1350", "200", "white")
+    setAttributes(RIVAL_CIRCLES[3], "1350", "100", "white")
+    setAttributes(RIVAL_CIRCLES[4], "1250", "200", "white")
+    setAttributes(RIVAL_CIRCLES[5], "1250", "150", "white")
+    setAttributes(RIVAL_CIRCLES[6], "1350", "150", "white")
 }
 
 
-//Generiert eine zufällige Zahl von 1 bis max
-function generateRandomNumber(max) {
-    return Math.floor(Math.random() * max) + 1;
-}
 
-
+// Prüft ob der Score kleiner oder gleich 77 ist
 function isUnderSeventySeven(score) {
-    if(score <= 77) {
+    if (score <= 77) {
         return true;
     }
     return false;
 }
 
 
-function updateMyScore(diceNumber) {
+
+// Färbt die Kreise im Würfel in dem gegebenen Intervall schwarz: from - to
+function setCirclesToBlack(turn, from, to) {
+    for (let i = from; i<to; i++) {
+        turn === 1 ? MY_CIRCLES[i].setAttribute("fill", "black") : RIVAL_CIRCLES[i].setAttribute("fill", "black");
+    }
+}
+
+
+
+function getScorePoints() {
+    const numbers = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
+    const scores = {};
+
+    // Mein Punktestand
     const myScore = document.getElementById("my-score");
-    myScorePoints = myScorePoints + diceNumber;
-    if(isUnderSeventySeven(myScorePoints)) {
-        myScore.textContent = "Score: " + myScorePoints;
+    let score = myScore.innerText;
+    let number = "";
+    // Extrahiert die Zahlen aus dem Punktestand: z.B Score: 23 --> 23
+    for (let i = 0; i<score.length; i++) {
+        // Speichert die Zahl aus dem Punkestand
+        if (numbers.includes(score[i])) {
+            number += score[i];
+        } 
     }
-    else {
-        myScorePoints = myScorePoints - diceNumber;
-    }
-}
+    // Wandelt den Punktestand in einen Integer um und speichert den Punkestand ab
+    number = parseInt(number);
+    scores.myScore = number;
 
-
-function updateRivalScore(diceNumber) {
+    // Das gleiche nochmal mit dem Punktestand vom Gegner
     const rivalScore = document.getElementById("rival-score");
-    rivalScorePoints = rivalScorePoints + diceNumber;
-    if(isUnderSeventySeven(rivalScorePoints)) {
-        rivalScore.textContent = "Score: " + rivalScorePoints;
+    score = rivalScore.innerText;
+    number = "";
+    for (let i = 0; i<score.length; i++) {
+        if (numbers.includes(score[i])) {
+            number += score[i];
+        } 
     }
-    else {
-        rivalScorePoints = rivalScorePoints - diceNumber;
+    number = parseInt(number);
+    scores.rivalScore = number;
+    return scores;
+}
+
+
+
+// Update meines Scores
+function updateScore(turn, diceNumber) {
+    const scores = getScorePoints();
+    // Ändert meinen Punkestand 
+    if (turn === 1) {
+        const myScore = document.getElementById("my-score");
+        scores.myScore = scores.myScore + diceNumber;
+        // Score wird nur gesetzt, wenn kleiner gleich 77
+        if(isUnderSeventySeven(scores.myScore)) {
+            myScore.textContent = "Score: " + scores.myScore;
+        }
+    }
+    // Ändert den Punkestand des Gegners
+    else if (turn === 2) {
+        const rivalScore = document.getElementById("rival-score");
+        scores.rivalScore = scores.rivalScore + diceNumber;
+        // Score nur setzen, wenn kleiner gleich 77
+        if(isUnderSeventySeven(scores.rivalScore)) {
+            rivalScore.textContent = "Score: " + scores.rivalScore;
+        }
+    }
+
+}
+
+
+
+// Färbt die Kreise im Würfel auf die Hintergrundfarbe
+function setCirclesToWhite(turn) {
+    const circleLength = 7;
+    // Setzt alle meine Kreise auf weiß
+    if (turn === 1) {
+        for (let i = 0; i<circleLength; i++) {
+            MY_CIRCLES[i].setAttribute("fill", "white");
+        }
+    }
+    // Setzt alle Gegner Kreise auf weiß
+    else if (turn === 2) {
+        for (let i = 0; i<circleLength; i++) {
+            RIVAL_CIRCLES[i].setAttribute("fill", "white");
+        }
     }
 }
 
 
-//Färbt alle meine Kreise weiß
-function setMyCirclesToWhite() {
-    const circleLength = MY_CIRCLES.length;
-    for(let i = 0; i<circleLength; i++) {
-        MY_CIRCLES[i].setAttribute("fill", "white");
-    }
+
+// Generiert eine zufällige Zahl von 1 bis max
+function generateRandomNumber(max) {
+    return Math.floor(Math.random() * max) + 1;
 }
 
 
-/*
-cx und cy Koordinaten der Kreise
-CIRCLE_1, 500, 150
-CIRCLE_2, 450, 100
-CIRCLE_3, 550, 200
-CIRCLE_4, 550, 100
-CIRCLE_5, 450, 200
-CIRCLE_6, 450, 150
-CIRCLE_7, 550, 150 
-*/
-function createMyDice() {
-    setMyCirclesToWhite();
-    const diceNumber = generateRandomNumber(6);
+
+function displayDice(turn, diceNumber) {
     switch(diceNumber) {
         case 1:
-            CIRCLE_1.setAttribute("fill", "black");
+            setCirclesToBlack(turn, 0, 1);
             break;
         case 2:
-            CIRCLE_2.setAttribute("fill", "black");
-            CIRCLE_3.setAttribute("fill", "black");
+            setCirclesToBlack(turn, 1, 3);
             break;
         case 3:
-            CIRCLE_1.setAttribute("fill", "black");
-            CIRCLE_2.setAttribute("fill", "black");
-            CIRCLE_3.setAttribute("fill", "black");
+            setCirclesToBlack(turn, 0, 3);
             break;
         case 4:
-            CIRCLE_2.setAttribute("fill", "black");
-            CIRCLE_3.setAttribute("fill", "black");
-            CIRCLE_4.setAttribute("fill", "black");
-            CIRCLE_5.setAttribute("fill", "black");
+            setCirclesToBlack(turn, 1, 5);
             break;
         case 5:
-            CIRCLE_1.setAttribute("fill", "black");
-            CIRCLE_2.setAttribute("fill", "black");
-            CIRCLE_3.setAttribute("fill", "black");
-            CIRCLE_4.setAttribute("fill", "black");
-            CIRCLE_5.setAttribute("fill", "black");
+            setCirclesToBlack(turn, 0, 5);
             break;
         case 6:
-            CIRCLE_2.setAttribute("fill", "black");
-            CIRCLE_3.setAttribute("fill", "black");
-            CIRCLE_4.setAttribute("fill", "black");
-            CIRCLE_5.setAttribute("fill", "black");
-            CIRCLE_6.setAttribute("fill", "black");
-            CIRCLE_7.setAttribute("fill", "black");
+            setCirclesToBlack(turn, 1, 7);
             break;
         default:
             console.log("Fehler");
     }
-    updateMyScore(diceNumber);
 }
 
 
-//Färbt alle Gegner Kreise weiß
-function setRivalCirclesToWhite() {
-    const circleLength = RIVAL_CIRCLES.length;
-    for(let i = 0; i<circleLength; i++) {
-        RIVAL_CIRCLES[i].setAttribute("fill", "white");
-    }
+
+// Stellt den gewürfelten Würfel dar
+function createDice(turn) {
+    return new Promise((resolve) => {
+        let animations = 0;
+        let diceNumber;
+    
+        // Zeitintervall erstellen --> Animation alle 25 ms wiederholt ausführen
+        let intervalId = null;
+        clearInterval(intervalId);
+        intervalId = setInterval(createAnimation, 25);
+    
+        // Kreiert die Würfel-Animation
+        function createAnimation() {
+            if(animations === 50) {
+                clearInterval(intervalId);
+                updateScore(turn, diceNumber);
+                resolve();
+            } 
+            else {
+                animations++;
+                setCirclesToWhite(turn);
+                diceNumber = generateRandomNumber(6);
+                displayDice(turn, diceNumber);
+            }
+        }
+    });
 }
 
 
-/*
-cx und cy Koordinaten der Kreise
-CIRCLE_8, 1300, 150
-CIRCLE_9, 1250, 100
-CIRCLE_10, 1350, 200
-CIRCLE_11, 1350, 100
-CIRCLE_12, 1250, 200
-CIRCLE_13, 1250, 150
-CIRCLE_14, 1350, 150 
-*/
-function createRivalDice() {
-    setRivalCirclesToWhite();
-    const diceNumber = generateRandomNumber(6);
-    switch(diceNumber) {
-        case 1:
-            CIRCLE_8.setAttribute("fill", "black");
-            break;
-        case 2:
-            CIRCLE_9.setAttribute("fill", "black");
-            CIRCLE_10.setAttribute("fill", "black");
-            break;
-        case 3:
-            CIRCLE_8.setAttribute("fill", "black");
-            CIRCLE_9.setAttribute("fill", "black");
-            CIRCLE_10.setAttribute("fill", "black");
-            break;
-        case 4:
-            CIRCLE_9.setAttribute("fill", "black");
-            CIRCLE_10.setAttribute("fill", "black");
-            CIRCLE_11.setAttribute("fill", "black");
-            CIRCLE_12.setAttribute("fill", "black");
-            break;
-        case 5:
-            CIRCLE_8.setAttribute("fill", "black");
-            CIRCLE_9.setAttribute("fill", "black");
-            CIRCLE_10.setAttribute("fill", "black");
-            CIRCLE_11.setAttribute("fill", "black");
-            CIRCLE_12.setAttribute("fill", "black");
-            break;
-        case 6:
-            CIRCLE_9.setAttribute("fill", "black");
-            CIRCLE_10.setAttribute("fill", "black");
-            CIRCLE_11.setAttribute("fill", "black");
-            CIRCLE_12.setAttribute("fill", "black");
-            CIRCLE_13.setAttribute("fill", "black");
-            CIRCLE_14.setAttribute("fill", "black");
-            break;
-        default:
-            console.log("Fehler");
-    }
-    updateRivalScore(diceNumber);
-    rollDiceButton.addEventListener("click", buttonHandler);
-}
 
-
-function checkWinner() {
+function endGame(turn) {
+    const rollDiceButton = document.getElementById("roll-button");
+    rollDiceButton.removeEventListener("click", buttonHandler);
     const gameStatus = document.getElementById("game-status");
-    if(myScorePoints === 77) {
-        rollDiceButton.removeEventListener("click", buttonHandler);
+
+    if (turn === 1) {
         gameStatus.textContent = "You have won!";
     }
-    else if(rivalScorePoints == 77) {
-        rollDiceButton.removeEventListener("click", buttonHandler);
+    else if (turn === 2) {
         gameStatus.textContent = "You have lost!";
     }
 }
 
 
-//Wenn ,,Roll Dice'' gedrückt wird passiert folgendes:
-function buttonHandler() {
-    rollDiceButton.removeEventListener('click', buttonHandler);
-    createMyDice();
-    checkWinner();
-    createRivalDice();
-    checkWinner();
+
+//Prüft ob jemand gewonnen hat
+function checkWinner() {
+    const scores = getScorePoints();
+    // Wenn ich gewonnen habe
+    if(scores.myScore === 77) {
+        endGame(1);
+        return true;
+    }
+    // Wenn der Gegner gewonnen hat
+    else if(scores.rivalScore == 77) {
+        endGame(2);
+        return true;
+    }
+    else {
+        return false;
+    }
 }
 
 
-appendCirclesToSvg();
-setCircleAttributes();
+
+//Wenn ,,Roll Dice'' gedrückt wird, wird diese Funktion ausgeführt
+function buttonHandler() {
+    // Deaktiviere vorübergehend den ,,Roll Dice'' Button
+    const rollDiceButton = document.getElementById("roll-button");
+    rollDiceButton.removeEventListener('click', buttonHandler);
+
+    console.log("Ich würfele");
+    // Zuerst würfele ich
+    createDice(1)
+    // Erst wenn ich zu Ende gewürfelt habe, würfelt der Gegner mit einer Verzögerung von 1,75 Sekunden
+    .then(() => {
+        setTimeout(() => {
+            console.log("Gegner würfelt");
+            if(!checkWinner()) {
+                createDice(2)
+                // Prüft ob jemand gewonnen hat nachdem beide Spieler gewürfelt haben
+                .then(() => {
+                    console.log("Beide haben zu Ende gewürfelt");
+                    if (!checkWinner()) {
+                        rollDiceButton.addEventListener("click", buttonHandler);
+                    }
+                });
+            }
+        }, 1750);
+    });
+}
+
+
+function restartGame() {
+    // Setze alle Kreise auf weiß
+    setCirclesToWhite(1);
+    setCirclesToWhite(2);
+
+    // Setze Spielstatus und die Punktzahlen zurück
+    const gameStatus = document.getElementById("game-status");
+    gameStatus.textContent = "";
+    const myScore = document.getElementById("my-score");
+    myScore.textContent = "Score: 0";
+    const rivalScore = document.getElementById("rival-score");
+    rivalScore.textContent = "Score: 0";
+
+    // Fügt dem ,,Roll Dice'' Button wieder Funktionalität hinzu
+    const rollDiceButton = document.getElementById("roll-button");
+    rollDiceButton.addEventListener("click", buttonHandler);
+}
+
+
+
+startGame();
